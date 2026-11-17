@@ -1,0 +1,90 @@
+@startuml
+title Arquitectura POM + Responsive Testing (Playwright + Java + Gradle)
+
+skinparam classAttributeIconSize 0
+skinparam packageStyle rectangle
+
+package "config" {
+    enum ViewportSize {
+        DESKTOP(1920, 1080)
+        TABLET(768, 1024)
+        MOBILE(390, 844)
+        - width : int
+        - height : int
+        + getWidth() : int
+        + getHeight() : int
+    }
+}
+
+package "utils" {
+    class StyleHelper {
+        + getCssProperty(Locator, String) : String
+        + getBoundingBox(Locator) : BoundingBox
+        + isImageLoaded(Locator) : boolean
+        + isStackedVertically(Locator, Locator) : boolean
+    }
+}
+
+package "pages (Page Object Model)" {
+    abstract class BasePage {
+        # page : Page
+        + BasePage(Page)
+        + navigateTo(String) : void
+        + getCurrentUrl() : String
+    }
+
+    class HomePage {
+        - cards : Locator
+        - headerBanner : Locator
+        + HomePage(Page)
+        + clickCard(String) : void
+        + getCardsCount() : int
+        + getCardLocator(int) : Locator
+        + getHeaderBanner() : Locator
+    }
+
+    class TextBoxPage {
+        - fullNameInput : Locator
+        - emailInput : Locator
+        - submitButton : Locator
+        - outputBox : Locator
+        + TextBoxPage(Page)
+        + fillForm(String, String) : void
+        + getOutputText() : String
+    }
+
+    BasePage <|-- HomePage
+    BasePage <|-- TextBoxPage
+    BasePage ..> StyleHelper : usa
+}
+
+package "test.base" {
+    class BaseTest {
+        # {static} playwright : Playwright
+        # {static} browser : Browser
+        # context : BrowserContext
+        # page : Page
+        # initContext(ViewportSize) : void
+    }
+    BaseTest ..> ViewportSize : configura
+}
+
+package "test.tests" {
+    class TextBoxTest {
+        + testSuccessfulFormSubmission() : void
+    }
+
+    class HomeLayoutTest {
+        + testDesktopGridLayout() : void
+        + testMobileStackedLayout() : void
+        + testTypographyAndBannerSpecs() : void
+    }
+
+    BaseTest <|-- TextBoxTest
+    BaseTest <|-- HomeLayoutTest
+    TextBoxTest ..> HomePage : navega
+    TextBoxTest ..> TextBoxPage : interactúa
+    HomeLayoutTest ..> HomePage : audita UI
+}
+
+@enduml
