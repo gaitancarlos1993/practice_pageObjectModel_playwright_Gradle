@@ -1,4 +1,4 @@
-package org.practicePOM.config.*;
+package org.practicePOM.config;
 public enum ViewportSize {
     DESKTOP(1920,1080),
     TABLET(768,1024),

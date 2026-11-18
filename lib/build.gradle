@@ -18,9 +18,10 @@ repositories {
 dependencies {
     // Use JUnit Jupiter for testing.
     implementation 'com.microsoft.playwright:playwright:1.48.0'
-    testImplementation platform('org.junit.jupiter:junit-jupiter:5.11.0')
-    testImplementation 'org.junit.jupiter:junit-jupiter'
 
+    // JUnit 5 (Grupo correcto: org.junit:junit-bom)
+    testImplementation platform('org.junit:junit-bom:5.11.0')
+    testImplementation 'org.junit.jupiter:junit-jupiter'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 
     // This dependency is exported to consumers, that is to say found on their compile classpath.

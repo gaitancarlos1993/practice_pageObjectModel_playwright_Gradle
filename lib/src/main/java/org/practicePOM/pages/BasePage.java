@@ -7,16 +7,16 @@ import com.microsoft.playwright.options.WaitUntilState;
 // donde otras clases heredaran de ella.
 // Permite reutilizar comportamientos y atributos que todas las pantallas tienen en comun
 public abstract class BasePage{
-    protected final Page;
+    protected final Page page;
     public BasePage(Page page){
         this.page = page;
     }
-    public void navigateTo(String Url){
-        ppage.navigate(url, new Page.NavigateOptions().setWaitUntil(WaitUntilState.DOCUMENTLOADED));
+    public void navigateTo(String url){
+        page.navigate(url, new Page.NavigateOptions().setWaitUntil(WaitUntilState.DOMCONTENTLOADED));
 
     }
     //getCurrentUrl devuelve un string plano con la direcciòn web de la pantalla actual.
     public String getCurrentUrl(){
-        return page.Url();
+        return page.url();
     }
 }
